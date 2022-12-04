@@ -57,6 +57,7 @@ public class Pager {
 				 this.setPage(totalPage);
 			 }
 			 //totalBlock은 페이지네이션의 총 갯수
+			 //총블럭이 몇 개인가
 			 Long totalBlock = totalPage/this.getPerBlock();
 			 //totalPage를 PerBlock으로 나눴을때 0이 아니라면 totalBlock은 +1
 			 //ex: totalPage:7 perPage:5 -> totalBlock: 1+1 

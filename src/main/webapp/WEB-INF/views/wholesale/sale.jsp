@@ -41,10 +41,14 @@
               <span aria-hidden="true">&laquo;</span>
             </a> 
           </li> 
+
+
           <!-- 조정된 다음 페이지를 기준으로 startNum t0 lastNum까지 반복문돌려 블럭 형성  -->
           <c:forEach begin="${pager.startNum}" end="${pager.lastNum}" var="i">
             <li class="page-item"><a class="page-link" href="./list?page=${i}&search=${pager.search}"> ${i}</a> </li>
           </c:forEach> 
+
+          
           <li class="page-item ${pager.next?'':'disabled'}">
             <a class="page-link" href="./list?page=${pager.lastNum+1}&search=${pager.search}" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>

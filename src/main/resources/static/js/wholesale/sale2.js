@@ -8,13 +8,12 @@ let apiURL = 'https://at.agromarket.kr/openApi/price/sale.do';
 function getJSON(i) {
     let pageNo = 1;
     let perPage = 10;
+    let perBlock = 10;
+    let startBlock = (i-1)*perBlock;
+    let lastBlock = i*perBlock;
     let whsalCd = $("#whsalCd").val();
     let saleDate = $("#saleDate").val();
     let largeCd = $("#largeCd").val();
-    console.log("pram=="+whsalCd);
-    // let whsalCd =110001;
-    // let saleDate = 20221122;
-    // let largeCd = 06;
    let url = 'https://cors-anywhere.herokuapp.com/'+apiURL
         $.ajax({
         type:"get",
@@ -32,22 +31,60 @@ function getJSON(i) {
         crossOrigin: true,
         dataType:"json",
         success: function(jsonData){
-            let totPage = parseInt(jsonData.totCnt/10)+1 //총페이지수
-            let setSmallPage = jsonData.dataCnt/10 //페이지 당 뷰 수. 리스트 10개씩 뽑아올때 1Page당 몇 뷰가 생기는지. 
-            if(jsonData.dataCnt%10>0){ //나머지값이 있다면 뷰 추가
-                setSmallPage++
+            let totPage = parseInt(jsonData.totCnt/1000) //필수 파라미터로 넘겨야하는 페이지수
+            if(jsonData.totCnt%1000>0){ //나머지값이 있다면 뷰 추가
+                totPage++
+            }
+            //
+          let totalBlock = jsonData.dataCnt/perBlock //1페이지 당 페이징 블럭 수 
+            if(jsonData.dataCnt%perBlock>0){ //나머지값이 있다면 뷰 추가
+                totalBlock++
             }
             if(i<1){
                 i =1;
             }
-            let startRow =(i-1)*perPage;;
+
+            let startRow =(i-1)*perPage;
             let lastRow = i*perPage;
             let pagings = '';
-            for(let i=1; i<setSmallPage; i++){
-                pagings += '<button type="button" onclick="getJSON('+i+')">'+i+'</button>';
-        
-            }
+     
 
+            dis='';
+            blo='';
+            dis2='';
+          
+            if(i<2){
+              dis = '<li class="page-item disabled">' ;
+           }else{
+               dis ='<li class="page-item">' ;
+           }
+          
+           for(let i=startBlock; i<lastBlock; i++){
+              blo +=  '<li class="page-item"><a class="page-link" onclick="getJSON('+i+')">'+i+'</a></li>'
+          }
+          
+          if(i>=totalBlock){
+              dis2 = '<li class="page-item disabled">' 
+           }else{
+              dis2 = '<li class="page-item">' 
+           }
+          
+          
+              pagings += '<div class="chefs section-bg" style="padding-bottom: 10px;">' +
+              '<nav aria-label="Page navigation example">' +
+                '<ul class="pagination">'
+                     + dis
+                      +  '<a class="page-link" onclick=" getJSON(i)" aria-label="Previous">' +
+                          '<span aria-hidden="true">&laquo;</span></a></li>' 
+                          + blo
+                           +dis2
+                           + '<a class="page-link" onclick=" getJSON(i)" aria-label="Next">' +
+                          '<span aria-hidden="true">&raquo;</span></a></li></ul></nav></div>'
+
+            // for(let i=1; i<totalBlock; i++){
+            //     pagings += '<button type="button" onclick="getJSON('+i+')">'+i+'</button>';
+        
+            // }
            
             console.log("통신성공");
             console.log(jsonData);
@@ -55,15 +92,17 @@ function getJSON(i) {
             console.log("cnt=="+jsonData.dataCnt);//페이지데이터건수
             console.log("url=="+url);//요청 url
             console.log(totPage);
-            console.log("setSmallpage ="+setSmallPage);
+            console.log("totalBlock ="+totalBlock);
             console.log("startRow ="+startRow);
             console.log("lastRow ="+lastRow);
+            console.log("startBlock ="+startBlock);
+            console.log("lastBlock ="+lastBlock);
+            console.log("pagingHtml ="+pagings);
             console.log("jsonData.data[2].saleDate"+jsonData.data[2].saleDate);
 
             $('.table_body').empty();
             $('.plsPage').empty();
             $('.paging').empty();
-                
 
             str = '<TR>'; 
             for(let j=startRow; j<lastRow+1; j++){
@@ -74,13 +113,6 @@ function getJSON(i) {
              str += '</TR>';
              }
 
-                // $.each(jsonData.data , function(i){
-                //     str += '<TD>' + jsonData.data[i].saleDate + '</TD>'+
-                //            '<TD>' + jsonData.data[i].whsalName + '</TD>'+
-                //             '<TD>' + jsonData.data[i].cmpName + '</TD>'+
-                //            '<TD>' + jsonData.data[i].smallName + '</TD>';
-                //     str += '</TR>';
-                // });
 
 
             $('.table_body').append(str);
@@ -95,5 +127,49 @@ function getJSON(i) {
 }
 
 
+// function getBlock(startBlock){
+//     $('.pagingFuntion').empty();
+//     let totalBlocks = totalBlock;
+    
+//     console.log("bbbbbbbbbb=="+totalBlocks);
+//     let perBlock = 10;
+//     let startBlock = (i-1)*perBlock;
+//     let lastBlock = i*perBlock;
+
+//   dis='';
+//   blo='';
+//   dis2='';
+
+//   if(i<2){
+//     dis = '<li class="page-item disabled">' ;
+//  }else{
+//      dis ='<li class="page-item">' ;
+//  }
+
+//  for(let i=startBlock; i<lastBlock; i++){
+//     blo +=  '<li class="page-item"><a class="page-link" onclick="getJSON('+i+')">'+i+'</a></li>'
+// }
+
+// if(i>=totalBlock){
+//     dis2 = '<li class="page-item disabled">' 
+//  }else{
+//     dis2 = '<li class="page-item">' 
+//  }
+
+
+//     pagings += '<div class="chefs section-bg" style="padding-bottom: 10px;">' +
+//     '<nav aria-label="Page navigation example">' +
+//       '<ul class="pagination">'
+//            + dis
+//             +  '<a class="page-link" onclick="getBlock(i-1)" aria-label="Previous">' +
+//                 '<span aria-hidden="true">&laquo;</span></a></li>' 
+//                 + blo
+//                  +dis2
+//                  + '<a class="page-link" onclick="getBlock(i-1)" aria-label="Next">' +
+//                 '<span aria-hidden="true">&raquo;</span></a></li></ul></nav></div>'
+
+//                 $('.pagingFuntion').append(pagings2);
+
+// }
 
 
