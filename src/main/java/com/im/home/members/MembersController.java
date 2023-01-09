@@ -128,11 +128,12 @@ public class MembersController {
 	public ModelAndView setDomaeSignUp(MembersVO membersVO, MultipartFile files) throws Exception{
 		
 		ModelAndView mv = new ModelAndView();
-		
+		log.info("주소 :: {} " ,membersVO.getAddress());
 		log.info("==============도매업자 회원가입============");
 		membersVO.setPassWord((passwordEncoder.encode(membersVO.getPassword())));;
 		int result = membersService.setDomaeSignUp(membersVO, files);
 		membersService.setMembersRole(membersVO);
+		log.info("도매업자 주소 :: {} " , membersVO.getAddress());
 		
 		mv.addObject("membersVO", membersVO);
 		mv.setViewName("members/login");

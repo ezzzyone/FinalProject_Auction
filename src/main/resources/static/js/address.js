@@ -1,5 +1,8 @@
 console.log("address.js");
 
+
+
+
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
             center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
@@ -17,7 +20,11 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     });
 
 
+    const betterAddress = $("#betterAddress").val();
+    const resultsAddress = $("#resultsAddress").val();
+
     function sample5_execDaumPostcode() {
+
         new daum.Postcode({
             oncomplete: function(data) {
                 var addr = data.address; // 최종 주소 변수
@@ -29,19 +36,39 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
                     // 정상적으로 검색이 완료됐으면
                     if (status === daum.maps.services.Status.OK) {
 
+                        $("#betterAddress").focus();
+
                         var result = results[0]; //첫번째 결과의 값을 활용
 
                         // 해당 주소에 대한 좌표를 받아서
                         var coords = new daum.maps.LatLng(result.y, result.x);
                         // 지도를 보여준다.
-                        mapContainer.style.display = "block";
-                        map.relayout();
-                        // 지도 중심을 변경한다.
-                        map.setCenter(coords);
-                        // 마커를 결과값으로 받은 위치로 옮긴다.
-                        marker.setPosition(coords)
+                        // mapContainer.style.display = "block";
+                        // map.relayout();
+                        // // 지도 중심을 변경한다.
+                        // map.setCenter(coords);
+                        // // 마커를 결과값으로 받은 위치로 옮긴다.
+                        // marker.setPosition(coords)
                     }
+                    const resultsAddress = addr + betterAddress;
+                    console.log(resultsAddress);
+
                 });
             }
         }).open();
     }
+
+
+$("#betterAddress").blur(function(){
+
+    console.log("상세주소에서 마우스 벗어남");
+
+    // $("#betterAddress").val() = $("#sample5_address").val() + $("#betterAddress").val(); 
+    
+    //자동완성된 주소 + 상세주소를 합쳐 DB에 저장한다
+    const str = $("#sample5_address").val() + ' ' + $("#betterAddress").val(); 
+    $("#resultsAddress").val(str);
+    console.log($("#resultsAddress").val());
+    console.log(str);
+
+});

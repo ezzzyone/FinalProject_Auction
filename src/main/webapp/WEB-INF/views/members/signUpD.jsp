@@ -84,8 +84,10 @@
                 </div>
                 
                 <div class="form-group mt-3">
-	                <input type="text" id="sample5_address" name="address" placeholder="주소">
+	                <input type="text" id="sample5_address" placeholder="주소">
 					<input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+					<input type="text" id="betterAddress" placeholder="상세주소">
+					<input type="hidden" id="resultsAddress" name="address" value="">
 					<div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
 				</div>
                 
