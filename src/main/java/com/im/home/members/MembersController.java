@@ -128,11 +128,12 @@ public class MembersController {
 	public ModelAndView setDomaeSignUp(MembersVO membersVO, MultipartFile files) throws Exception{
 		
 		ModelAndView mv = new ModelAndView();
-		
+		log.info("주소 :: {} " ,membersVO.getAddress());
 		log.info("==============도매업자 회원가입============");
 		membersVO.setPassWord((passwordEncoder.encode(membersVO.getPassword())));;
 		int result = membersService.setDomaeSignUp(membersVO, files);
 		membersService.setMembersRole(membersVO);
+		log.info("도매업자 주소 :: {} " , membersVO.getAddress());
 		
 		mv.addObject("membersVO", membersVO);
 		mv.setViewName("members/login");
@@ -204,6 +205,7 @@ public class MembersController {
 		
 		
 		log.info("ddddd => {}" ,principal.getName()); 
+		log.info("마이페이지 프린시펄 :: {} " , principal);
 		
 		membersVO.setId(principal.getName());	//시큐리티로 로그인한 아이디값을 가져오는 코드
 		
@@ -559,8 +561,10 @@ public class MembersController {
 			
 			
 			if(result == 1) {
+				log.info("소셜 추가 정보 입력 성공 (컨트롤러) !!");
 				mv.setViewName("redirect:../");
 			}else {
+				log.info("소셜 추가 정보 입력 실패!!!! ( 컨트롤러)");
 				mv.setViewName("/members/socialAdd");
 			}
 			

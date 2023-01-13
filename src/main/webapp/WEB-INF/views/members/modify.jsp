@@ -205,12 +205,12 @@
                 if(resultPw == 1){
                     console.log("비밀번호 일치");
                     /* alert("회원탈퇴가 성공적으로 완료되었습니다. 이용해주셔서 감사합니다."); */
-						Swal({
-						  title: "Good job!",
-						  text: "You clicked the button!",
-						  icon: "success",
-						  button: "Aww yiss!",
-						});
+						swal.fire({
+					            title: "사진 등록 성공!!",
+					            text: "이어서 회원가입을 하십시오.",
+					            icon: "success",
+					            button: "확인",
+	    				});
                     window.location.href="../";
                 } else{
                     console.log("비밀번호 틀림");

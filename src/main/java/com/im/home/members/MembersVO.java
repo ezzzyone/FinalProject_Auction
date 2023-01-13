@@ -70,9 +70,11 @@ public class MembersVO implements UserDetails, OAuth2User{
 	private RoleVO roleVO;
 	private List<MembersVO> membersVOs;
 	
+	private String picture;
+	
 	
 	//=========소셜로그인===========
-	//Kakao
+	//ex ===>  social : Kakao
 	private String social;
 
 	

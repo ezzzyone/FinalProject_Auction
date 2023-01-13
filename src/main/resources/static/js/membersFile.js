@@ -39,6 +39,9 @@ function onClickUpload(e) {
 
 }
 
+const humanImg = document.querySelector("#humanImg");
+
+
 $("#memberFileAdd").change(function(){
 
     let pv = $("#profileImg").val();
@@ -49,6 +52,19 @@ $("#memberFileAdd").change(function(){
     if(pv != null){
 
         console.log("사진 들어감");
+
+        console.log("디스 : ", $(this));
+        console.log("디스 : ", $("#memberFileAdd").val());
+        console.log("디스 : ", $("#memberFileAdd").attr("src"));
+
+        // humanImg.src = $(this).val();
+
+        swal.fire({
+            title: "사진 등록 성공!!",
+            text: "이어서 회원가입을 하십시오.",
+            icon: "success",
+            button: "확인",
+	    });
 
         $("#imgSpan").html("사진이 등록되었습니다.");
     }

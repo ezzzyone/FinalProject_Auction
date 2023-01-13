@@ -171,6 +171,22 @@
 		<update id="setDeliveryStateUpdate" parameterType="ProductVO">
 			UPDATE PRODUCT SET STATENUM = #{stateNum} WHERE PRODUCT_NUM = #{product_num}
 		</update>
+		<!-- 상품 도착 -->
+		<update id="setDeliverySuccess" parameterType="ProductVO">
+			UPDATE PRODUCT SET STATENUM = #{stateNum} WHERE PRODUCT_NUM = #{product_num}
+		</update>
+		<!-- 배송 현황 -->
+		<select id="getDeliverySelect" parameterType="ProductVO" resultMap="deliveryResult">
+			SELECT * FROM 
+			PRODUCT P
+			INNER JOIN
+			DELIVERY_STATE DS 
+			ON P.STATENUM = DS.STATENUM
+			INNER JOIN
+			MEMBERS M 
+			ON P.ID = M.ID
+			WHERE P.PRODUCT_NUM = #{product_num}
+		</select>
 		
 <!-- 경매시작 -->
 		<!-- 경매 등록 -->
@@ -682,7 +698,6 @@
 	 		<result column="sign_date" property="sign_date"/>
 	 		<result column="bidding" property="bidding"/>
 	 		<result column="award" property="award"/>
-	 		<result column="name" property="name"/>
 	 		<result column="id" property="id"/>
 	 		<result column="product_num" property="product_num"/>
  		</association>
@@ -692,6 +707,36 @@
  			<result column="fileName" property="fileName"/>
  			<result column="oriName" property="oriName"/>
  		</collection>
+ 	</resultMap>
+ 	
+ 	<resultMap type="ProductVO" id="deliveryResult">
+ 		<id column="product_num" property="product_num"/>
+ 		<result column="auction_num" property="auction_num"/>
+ 		<result column="grade_num" property="grade_num"/>
+ 		<result column="name" property="name"/>
+ 		<result column="product_address" property="product_address"/>
+ 		<result column="quantity" property="quantity"/>
+ 		<result column="weight" property="weight"/>
+ 		<result column="sales" property="sales"/>
+ 		<result column="id" property="id"/>
+ 		<result column="stateNum" property="stateNum"/>
+ 		<association property="membersVO" javaType="MembersVO">
+ 			 	<id column="id" property="id"/>
+	 			<result column="passWord" property="passWord"/>
+	 			<result column="realName" property="realName"/>
+	 			<result column="nickName" property="nickName"/>
+	 			<result column="email" property="email"/>
+	 			<result column="birth" property="birth"/>
+	 			<result column="gender" property="gender"/>
+	 			<result column="phone" property="phone"/>
+	 			<result column="joinDate" property="joinDate"/>
+	 			<result column="black" property="black"/>
+	 			<result column="address" property="address"/>
+ 		</association>
+ 		<association property="deliveryStateVO" javaType="DeliveryStateVO">
+ 			<id column="stateNum" property="stateNum"/>
+	 		<result column="stateName" property="stateName"/>
+ 		</association>
  	</resultMap>
  	
  	

@@ -52,6 +52,7 @@ public class socialLoginSuccess extends SimpleUrlAuthenticationSuccessHandler{
 			try {
 				count = membersMapper.getIdCheck(membersVO);
 				membersVO = membersMapper.getMyPage(membersVO);
+				log.info("갯 마이페이지 :: {} " , membersVO);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

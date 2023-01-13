@@ -111,7 +111,7 @@ $("#amd").click(function(){
 
 // 패스워드, 패스워드 체크, 닉네임, 이메일, 전화번호 
 // let results = [false, false, false, false, false];
-let results = [false, false, false];
+let results1 = [false, false, false];
 
 //passWord체크
 
@@ -170,7 +170,7 @@ $("#inputNickName").blur(function(){
 
     let result = nullCheck($("#inputNickName").val());
 
-    results[0] = result;
+    results1[0] = result;
 
     if(result){
         $("#nickNameHelp").html("정상입니다.");
@@ -193,7 +193,7 @@ function isEmail(asValue) {
 $("#inputEmail").blur(function(){
 
     let result = nullCheck($("#inputEmail").val());
-    results[1] = result;
+    results1[1] = result;
 
     if($("#inputEmail").val() == ''){
         $("#inputEmail").focus();
@@ -249,7 +249,7 @@ phoneFormat('01012345678');
 $("#inputPhone").blur(function(){
     let result = nullCheck($("#inputPhone").val());
     
-    results[2] = result;
+    results1[2] = result;
     
         if($("#inputPhone").val() == ''){
             $("#phoneHelp").focus();
@@ -267,7 +267,7 @@ $("#inputPhone").blur(function(){
 
 $("#signUpBtn").click(function(){
 
-    if(results.includes(false)){    //배열에 해당 (data)가 존재하는지 여부 판단
+    if(results1.includes(false)){    //배열에 해당 (data)가 존재하는지 여부 판단
         alert("필수 입력 사항은 입력해주세요.")
     }else{
         //필수입력사항을 다 입력했다면 회원가입 폼으로 전송

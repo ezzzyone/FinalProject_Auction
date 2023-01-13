@@ -354,6 +354,13 @@ public class AdminMembersController {
 		mv.setViewName("redirect:./productDetail?product_num="+productVO.getProduct_num());
 		return mv;
 	}
+	@GetMapping("deliverySuccess")
+	public ModelAndView setDeliverySuccess(ProductVO productVO)throws Exception{
+		ModelAndView mv = new ModelAndView();
+		int result = adminMembersService.setDeliverySuccess(productVO);
+		mv.setViewName("redirect:./deliverySelect?product_num="+productVO.getProduct_num());
+		return mv;
+	}
 	//상품 등급 수정
 	@GetMapping("productGrade")
 	public ModelAndView setProductGrade(ProductVO productVO)throws Exception{
@@ -392,6 +399,14 @@ public class AdminMembersController {
 		ModelAndView mv = new ModelAndView();
 		productVO = adminMembersService.getSaleDetail(productVO);
 		mv.addObject("saleDetail", productVO);
+		return mv;
+	}
+	//배송 현황
+	@GetMapping("deliverySelect")
+	public ModelAndView getDelivery(ProductVO productVO)throws Exception{
+		ModelAndView mv = new ModelAndView();
+		productVO = adminMembersService.getDeliverySelect(productVO);
+		mv.addObject("delivery", productVO);
 		return mv;
 	}
 }

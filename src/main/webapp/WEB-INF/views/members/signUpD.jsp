@@ -12,6 +12,7 @@
 <script defer src="/js/membersFile.js"></script>
 <script defer src="/js/joinVerify.js"></script>
 <script defer src="/js/address.js"></script>
+<script defer src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cbb0240b108c21736f19f74ec427093d&libraries=services"></script>
 <style>
@@ -83,8 +84,10 @@
                 </div>
                 
                 <div class="form-group mt-3">
-	                <input type="text" id="sample5_address" name="address" placeholder="주소">
+	                <input type="text" id="sample5_address" placeholder="주소">
 					<input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+					<input type="text" id="betterAddress" placeholder="상세주소">
+					<input type="hidden" id="resultsAddress" name="address" value="">
 					<div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
 				</div>
                 
@@ -108,7 +111,7 @@
 
                <div style="margin-left: 50px; margin-top: 15px;">
                         <div id="profileImg">
-                          <img alt="" src="/assets/img/profle.png" width="100px" height="100px" onclick="onClickUpload();">
+                          <img alt="" src="/assets/img/profle.png" id="humanImg" width="100px" height="100px" onclick="onClickUpload();">
                           <button type="button" class="btn btn-secondary" id="imgBtn" onclick="onClickUpload();">첨부파일</button>
                           <p id="imgSpan"></p> 
                 		</div>

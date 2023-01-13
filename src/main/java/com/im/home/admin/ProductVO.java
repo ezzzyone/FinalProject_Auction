@@ -2,6 +2,8 @@ package com.im.home.admin;
 
 import java.util.List;
 
+import com.im.home.members.MembersVO;
+
 import lombok.Data;
 
 @Data
@@ -20,6 +22,7 @@ public class ProductVO {
 	
 	private AuctionVO auctionVO;
 	
+	private MembersVO membersVO;
 	private DeliveryStateVO deliveryStateVO;
 	private ProductGradeVO productGradeVO;
 	private List<ProductFileVO> productFileVOs; // 상품 이미지

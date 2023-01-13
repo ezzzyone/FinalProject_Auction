@@ -64,7 +64,12 @@
                 	<div style="float: right; margin-top: 10px; cursor: pointer;">
 					<!-- <input type="button" id="loginBtn" onclick="location='/oauth2/authorization/kakao'" value="카카오 간편가입"> -->
 					<img alt="" src="/assets/img/kakao_login_medium_narrow.png" onclick="location='/oauth2/authorization/kakao'">
+					<img alt="" src="/assets/img/btnG_naverlogin.png" width="183px" height="45px" onclick="location='/oauth2/authorization/naver'">
 				</div>
+				
+			<!-- 	<div>
+					<button type="button" class="btn btn-primary" onclick="location='/oauth2/authorization/naver'">네이버 로그인</button>
+				</div> -->
 				
 				
 				<div class="form-group mb-3">
