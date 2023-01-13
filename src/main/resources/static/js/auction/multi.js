@@ -1,9 +1,16 @@
 // ......................................................
 // .......................UI Code........................
 // ......................................................
+// open-room 버튼 클릭 이벤트
 document.getElementById('open-room').onclick = function() {
+    // videos-container 선택자 불러와서 태그 안의 '준비 중' 내용 삭제 
     $("#videos-container").html("");
+    $("#videos-container").removeAttr("style");
+    //disableInputButtons 함수 실행
     disableInputButtons();
+    
+    //connection 객체의 open 함수 실행 (room-id 값을 가져와서 ) showRoomURL()
+    //connection 객체는 RTCMultiConnection 객체임
     connection.open(document.getElementById('room-id').value, function() {
         showRoomURL(connection.sessionid);
     });
@@ -43,7 +50,7 @@ document.getElementById('open-or-join-room').onclick = function() {
 var connection = new RTCMultiConnection();
 
 // by default, socket.io server is assumed to be deployed on your own URL
-connection.socketURL = 'https://192.168.0.16:9001/';
+connection.socketURL = 'https://192.168.50.172:9001/';
 
 // comment-out below line if you do not have your own socket.io server
 // connection.socketURL = 'https://muazkhan.com:9001/';
@@ -72,6 +79,9 @@ connection.iceServers = [{
     ]
 }];
 
+
+
+
 connection.videosContainer = document.getElementById('videos-container');
 connection.onstream = function(event) {
     var existing = document.getElementById(event.streamid);
@@ -89,6 +99,8 @@ connection.onstream = function(event) {
     try {
         video.setAttributeNode(document.createAttribute('autoplay'));
         video.setAttributeNode(document.createAttribute('playsinline'));
+        video.setAttributeNode(document.createAttribute('id'));
+        video.setAttribute('id','control-video');
     } catch (e) {
         video.setAttribute('autoplay', true);
         video.setAttribute('playsinline', true);
@@ -102,12 +114,35 @@ connection.onstream = function(event) {
           video.setAttribute('muted', true);
       }
     }
+    
     video.srcObject = event.stream;
+    getCameras(video.srcObject);
+
+    // 비디오 오디오 stop
+    $("#pausevideo").click(function(){
+    
+        video.srcObject.getVideoTracks().forEach((track) => (console.log(track)));
+        
+        // video.srcObject.getVideoTracks().forEach((track) => (track.enabled = !track.enabled));
+        // video.srcObject.getAudioTracks().forEach((track) => (track.enabled = !track.enabled));
+        video.srcObject.getVideoTracks().forEach((track) => (track.stop()));
+        video.srcObject.getAudioTracks().forEach((track) => (track.stop()));
+
+        document.getElementById('open-room').disabled = false;
+        $("#pausevideo").attr("disabled",'');
+    })
+
+
+    // 방송 재개 
+    $("#restartvideo").click(function(){
+        
+    })
+
 
     var width = parseInt(connection.videosContainer.clientWidth / 3) - 20;
     var mediaElement = getHTMLMediaElement(video, {
         title: event.userid,
-        buttons: ['full-screen'],
+        buttons: ['full-screen','volume-slider','mute-video','mute-audio'],
         width: width,
         showOnMouseEnter: false
     });
@@ -240,4 +275,25 @@ if(navigator.connection &&
    navigator.connection.type === 'cellular' &&
    navigator.connection.downlinkMax <= 0.115) {
   alert('2G is not supported. Please use a better internet service.');
+}
+
+
+
+async function getCameras(myStream){
+    try{
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const cameras = devices.filter((device) => (device.kind === "videoinput"));
+        const currentCamera = myStream.getAudioTracks()[0];
+        cameras.forEach((camera) => {
+            const option = document.createElement("option");
+            option.value = camera.deviceId;
+            option.innerText = camera.label;
+            if(currentCamera.label === camera.label) {
+                option.selected = true;
+            }
+            document.querySelector("#cameras").appendChild(option);
+        });
+    }catch(e){
+        console.log(e);
+    }
 }

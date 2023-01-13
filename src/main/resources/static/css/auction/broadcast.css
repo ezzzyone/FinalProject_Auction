@@ -29,6 +29,12 @@
     height: 440px;
     overflow: auto;
 }
+
+#participants-box{
+    height: 440px;
+    overflow: auto;
+}
+
 #chat-write{
     height: 50px;
 }
