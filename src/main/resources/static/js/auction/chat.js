@@ -1,3 +1,4 @@
+
 //경매 시작 버튼 클릭 시 실행
 $("#startauction").click(function(){
         
@@ -124,7 +125,7 @@ $("#terminateauction").click(function(){
       send();
   });
 
-  const websocket = new WebSocket("wss://172.30.1.34:80/chat");
+  const websocket = new WebSocket("wss://192.168.50.172:80/chat");
 
   websocket.onmessage = onMessage;
   websocket.onopen = onOpen;
@@ -137,8 +138,11 @@ $("#terminateauction").click(function(){
 
       let msg = document.getElementById("chat-input");
 
-      if(msg.value == ''){
-        alert("내용을 입력하세요.");
+      if(msg.value == '' || msg.value == ''+'\n'+''){
+        Swal.fire({
+            icon: 'error',
+            text: '내용을 입력해주세요!'
+          })
       }else{
         console.log(username + ":" + msg.value);
         websocket.send(username + ":" + msg.value);
@@ -208,7 +212,10 @@ $("#terminateauction").click(function(){
             }
       }else if(sessionId == '강퇴'){
         if(message == username){
-            alert("관리자에 의해 강제 퇴장 당하셨습니다.");
+            Swal.fire({
+                icon: 'warning',
+                text: '퇴장당하셨습니다.'
+              })
             location.replace("/");
         }
       }else if(sessionId == '[중지]'){
@@ -252,6 +259,9 @@ $("#terminateauction").click(function(){
         if (window.event.keyCode == 13) {
             // 엔터키가 눌렸을 때
             send();
+
+            $("#chat-input").val("");
+        
         }
     }
 
@@ -318,6 +328,26 @@ $("#terminateauction").click(function(){
         $("#bid-box").removeAttr("style");
     }
 
+    //방송 제어 화면 불러오기
+    function getBroadControl(){
+        $("#br-info").attr("style","display : none;");
+        $("#accordionFlushExample").attr("style","display : none;");
+        $("#control-broadcast").removeAttr("style");
+    }
+
+    //방송 정보 화면 불러오기
+    function getInfo(){
+        $("#control-broadcast").attr("style","display : none;");
+        $("#accordionFlushExample").attr("style","display : none;");
+        $("#br-info").removeAttr("style");
+    }
+
+    //경매 약관 불러오기
+    function getLawInfo(){
+        $("#br-info").attr("style","display : none;");
+        $("#control-broadcast").attr("style","display : none;");
+        $("#accordionFlushExample").removeAttr("style");
+    }
 
     //================================================================= 동작 함수 ===============================================================
 
