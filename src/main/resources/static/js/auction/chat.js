@@ -125,7 +125,7 @@ $("#terminateauction").click(function(){
       send();
   });
 
-  const websocket = new WebSocket("wss://192.168.50.172:80/chat");
+  const websocket = new WebSocket("wss://172.30.75.3:80/chat");
 
   websocket.onmessage = onMessage;
   websocket.onopen = onOpen;

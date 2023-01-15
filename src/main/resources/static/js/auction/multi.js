@@ -50,7 +50,7 @@ document.getElementById('open-or-join-room').onclick = function() {
 var connection = new RTCMultiConnection();
 
 // by default, socket.io server is assumed to be deployed on your own URL
-connection.socketURL = 'https://192.168.50.172:9001/';
+connection.socketURL = 'https://172.30.75.3:9001/';
 
 // comment-out below line if you do not have your own socket.io server
 // connection.socketURL = 'https://muazkhan.com:9001/';
@@ -130,6 +130,8 @@ connection.onstream = function(event) {
 
         document.getElementById('open-room').disabled = false;
         $("#pausevideo").attr("disabled",'');
+        $("#videos-container").html('<h1 style="color: white;">⚠ 일시 중지</h1>');
+        $("#videos-container").attr("style","background-color: black;");
     })
 
 
