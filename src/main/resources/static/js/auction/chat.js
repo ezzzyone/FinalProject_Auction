@@ -56,11 +56,13 @@ $("#terminateauction").click(function(){
 
     let award = $("#currentprice").html();
 
-    let awardarr = award.split(" ");
+    let awardarr = award.split("(");
 
     let lastprice = awardarr[0].replace(/,/g, "");
     lastprice *= 1;
 
+    let user = awardarr[1].replace("입찰자 : ","");
+    user = user.replace(" 님 )","");
 
 
 
@@ -72,7 +74,7 @@ $("#terminateauction").click(function(){
         data: {
             "product_num":product_num,
             "auction_num":auction_num,
-            "id":awardarr[3],
+            "id":user,
             "award":lastprice,
 
         },
@@ -125,7 +127,7 @@ $("#terminateauction").click(function(){
       send();
   });
 
-  const websocket = new WebSocket("wss://172.30.75.3:80/chat");
+  const websocket = new WebSocket("wss://192.168.0.38:80/chat");
 
   websocket.onmessage = onMessage;
   websocket.onopen = onOpen;
@@ -152,7 +154,16 @@ $("#terminateauction").click(function(){
   
   //경매에서 나갔을 때
   function onClose(evt) {
-      var str = "[퇴장]:"+ username + ": 님이 방을 퇴장하셨습니다.";
+      
+    //현재가 currentprice에서 가져와서 숫자로 변경
+    let curprice = $("#currentprice").html();
+        curprice = curprice.split("(");
+        curprice = curprice[0];
+
+        curprice = curprice.replace(/,/g, "");
+        curprice *=1;
+    
+    var str = "[퇴장]:"+ username + ": 님이 방을 퇴장하셨습니다."+":"+curprice;
     //   participants = participants.filter((element)=> element !== username);
     //   console.log(participants);
       websocket.send(str);
@@ -190,7 +201,7 @@ $("#terminateauction").click(function(){
       }else if(sessionId == '현재가'){
         // 입찰 상태 
         // 1. 현재가에 입찰가 입력
-        $("#currentprice").html(arr[1]+" (입찰자 : "+arr[2]+" 님 )");
+        $("#currentprice").html(arr[1]+"(입찰자 : "+arr[2]+" 님 )");
         // 2. 입찰자 판별 
             if(arr[2] != username){
                 $("#mypoint").html(myinitpoint);
@@ -205,18 +216,18 @@ $("#terminateauction").click(function(){
         str +="<span>"+arr[1]+arr[2]+"</span>"
         str += "</div>";
         $("#chat-box").append(str);
-            if(sessionId == '[입장]'){
-                participants.push(arr[1]);
-            }else{
-                participants = participants.filter((element)=> element !== username);
-            }
+            // if(sessionId == '[입장]'){
+            //     participants.push(arr[1]);
+            // }else{
+            //     participants = participants.filter((element)=> element !== username);
+            // }
       }else if(sessionId == '강퇴'){
         if(message == username){
             Swal.fire({
                 icon: 'warning',
                 text: '퇴장당하셨습니다.'
               })
-            location.replace("/");
+            // location.replace("/");
         }
       }else if(sessionId == '[중지]'){
         var str = "<div class='d-flex justify-content-center'>";
@@ -240,10 +251,50 @@ $("#terminateauction").click(function(){
         //낙찰자일때
         if(arr[2] == username){
             alert("경매가 종료되었습니다. 최종 낙찰자로 선정되었습니다. 내 낙찰 목록을 확인해주세요.");
-            location.replace("/");
+            location.replace("/auction/getmyproduct");
+        }else if(username == "dw"){
+
         }else{
-            alert("경매가 종료되었습니다. 최종 낙찰자로 선정되지 못했습니다.");
+            alert("경매가 종료되었습니다. 최종 낙찰자로 선정되지 못했습니다. 홈으로 이동합니다.");
             location.replace("/");
+            
+        }
+      }else if(sessionId == "[방송시작]"){
+        if(username != message){
+
+            setTimeout(() => $("#join-room").trigger('click'), 5000);
+        }
+      }else if(sessionId == "[전체참여자]"){
+        for(let i = 1; i<arr.length; i++){
+            participants[i-1] = arr[i];
+        }
+      }else if(sessionId == "[방송정지]"){
+        // $("#videos-container").prepend('<h1 style="color: white;" id="realPause">⚠ 일시 중지</h1>');
+        // $("#videos-container").attr("style","background-color: black;");
+      }else if(sessionId == "[방송재개]"){
+        
+      }else if(sessionId == "[재조정]"){
+        if(message == "[초기화]"){
+            $("#currentprice").html(init);
+            var str = "<div class='d-flex justify-content-center'>";
+                str +="<span>"+"최고가 입찰자 퇴장으로 인해 현재가가 초기화 되었습니다"+" (현재가 : "+init+" 원)"+"</span>"
+                str += "</div>";
+            $("#chat-box").append(str);
+        }else{
+            let renewalprice = arr[2];
+            renwalprice_number = renewalprice;
+            renewalprice += "";
+            renewalprice = renewalprice.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+            $("#currentprice").html(renewalprice+"(입찰자 : "+arr[1]+" 님 )");
+            // 2. 입찰자 판별 
+                if(arr[1] == username){
+                    minusPoint(renwalprice_number);
+                }
+            var str = "<div class='d-flex justify-content-center'>";
+                str +="<span>"+"최고가 입찰자 퇴장으로 인해 현재가/입찰자가 조정되었습니다."+" (현재가 : "+renwalprice+" 원,"+ arr[1]+" 님)"+"</span>"
+                str += "</div>";
+            $("#chat-box").append(str);
+
         }
       }
       else{
@@ -390,6 +441,11 @@ $("#terminateauction").click(function(){
         
         //넘버타입으로 변경
         let currentprice = $("#currentprice").html();
+        currentprice = currentprice.split("(");
+        currentprice = currentprice[0];
+
+        console.log("단위입찰 시 현재가 변경함수 : ", currentprice);
+
         currentprice = currentprice.replace(/,/g, "");
         currentprice *=1;
 
@@ -459,6 +515,9 @@ $("#terminateauction").click(function(){
         
         //현재가
         let curprice = $("#currentprice").html();
+        curprice = curprice.split("(");
+        curprice = curprice[0];
+
         curprice = curprice.replace(/,/g, "");
         curprice *=1;
 
@@ -502,6 +561,8 @@ $("#terminateauction").click(function(){
         finalinput = finalinput.replace(/,/g, "");
         finalinput *= 1;
 
+        let finalinput_number=finalinput;
+
          //현재가 변경 및 포인트 차감(천단위 변경 후 리턴)
          finalinput = changeCurPriceFree(finalinput);
 
@@ -509,7 +570,7 @@ $("#terminateauction").click(function(){
          //내 입찰상태 변경 => true
          checkmybidding = true;
  
-         websocket.send("현재가:"+finalinput+":"+username);
+         websocket.send("현재가:"+finalinput+":"+username+":"+finalinput_number);
 
 
     }
@@ -523,6 +584,11 @@ $("#terminateauction").click(function(){
         //보유포인트와 가격 비교
         //inputprice 계산 
         let inputprice = $("#currentprice").html();
+
+        inputprice = inputprice.split("(");
+        inputprice = inputprice[0];
+
+
         inputprice = inputprice.replace(/,/g, "");
         inputprice *=1;
         inputprice = inputprice + unitprice;
@@ -546,6 +612,7 @@ $("#terminateauction").click(function(){
             return;
         }
 
+        let inputprice_number = inputprice;
 
         // 검증 완료 시 진행
 
@@ -556,7 +623,7 @@ $("#terminateauction").click(function(){
         //내 입찰상태 변경 => true
         checkmybidding = true;
 
-        websocket.send("현재가:"+currentprice+":"+username);
+        websocket.send("현재가:"+currentprice+":"+username+":"+inputprice_number);
 
     }
 
@@ -565,17 +632,27 @@ $("#terminateauction").click(function(){
 
         let user = event.target.getAttribute('data-id');
 
-        let link ="/kdy/reportRequest?report_id="+user;
+        let result = window.confirm(user+"님을 신고하시겠습니까?");
 
-        window.open(link);
+        if(result){
+            let link ="/kdy/reportRequest?report_id="+user;
+
+            window.open(link);
+        }
     }
 
 
     // 강퇴하기 버튼 클릭 이벤트
     function setBan(event){
+        
+        let result = window.confirm("강퇴하시겠습니까?");
+
+        if(result){
+        
         let user = event.target.getAttribute('data-id');
 
         websocket.send("강퇴:"+user);
+        }
 
     }
 

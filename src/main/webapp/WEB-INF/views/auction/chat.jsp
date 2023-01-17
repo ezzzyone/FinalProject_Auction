@@ -35,7 +35,7 @@
     <!-- Principal 접속 아이디 -->
     <sec:authentication property="Principal" var="user"/>
     <input type="text" style="display: none;" id="username" value="${member}">
-    <input type="hidden" value="${user.roleNum}">
+    <input type="hidden" value="${user.roleVOs[0].roleNum}">
     <!---->
 
     <!-- 옥션 번호 -->
@@ -79,7 +79,7 @@
                             <div class="list-group-item">
                               <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1"><span class="opacity-50">제목</span>  ${vo.auctionVO.title}</h5>
-                                <small>허용 인원 수 ${vo.auctionVO.head_count}</small>
+                                <small>허용 인원 수 ${vo.auctionVO.head_count} 명</small>
                               </div>
                               <p class="mb-1"></p>
                               <small>${vo.auctionVO.sign_date}</small>
@@ -215,8 +215,8 @@
                             <div id="control-broadcast" class="row" style="display: none;">
                               <p class="text-center" style="margin-top: 10px;">방송 제어</p>
                               <button type="button" class="btn btn-outline-secondary col-3" id="open-room">방송시작</button>
-                              <button type="button" class="btn btn-outline-secondary col-3" id="pausevideo">방송 중지</button>
-                              <button type="button" class="btn btn-outline-secondary col-3" id="restartvideo">방송 재개</button>
+                              <button type="button" class="btn btn-outline-secondary col-3" id="pausevideo" disabled>방송 중지</button>
+                              <button type="button" class="btn btn-outline-secondary col-3" id="restartvideo" disabled>방송 재개</button>
                               <select class="col-3" id="cameras">
 
                               </select>
@@ -224,7 +224,7 @@
                               <p class="text-center">경매 제어</p>
                               <button type="button" class="btn btn-outline-secondary col-4" id="startauction">경매 시작</button>
                               <button type="button" class="btn btn-outline-secondary col-4" id="pauseauction">경매 중지</button>
-                              <button type="button" class="btn btn-outline-secondary col-4" id="pauseauction" id="terminateauction">경매 종료</button>
+                              <button type="button" class="btn btn-outline-secondary col-4" id="terminateauction">경매 종료</button>
                           </div>
                           </sec:authorize>
                     </div>
@@ -247,7 +247,7 @@
                         <div id="chat-frame">
                             <!-- 참여자 목록  -->
                             <div id="participants-box" class="border border-3" style="display: none;" onscroll="scrollFN()">
-                                <ul class="list-group list-group-flush" id="participants" data-role="${user.roleNum}"></ul>
+                                <ul class="list-group list-group-flush" id="participants" data-role="${user.roleVOs[0].roleNum}"></ul>
                             </div>
                             
                             <!-- 채팅 목록 -->
@@ -268,7 +268,7 @@
                             <!-- 경매 참여 (입찰 )-->
                             <div id="bid-box" style="display : none;" class="row">
                                 <div class="text-center">
-                                    <img src="/assets/img/profle.png" class="rounded">
+                                    <img src="/assets/img/pear.jpg" class="rounded" style="height: 150px; width: 300px;">
                                 </div>
 
                                 <div>
@@ -287,20 +287,20 @@
                                             <div class="opacity-50 col-4">수량</div>
                                           </div>
                                           <div class="row">
-                                            <span class="col-4">${vo.quantity} kg</span>
+                                            <span class="col-4">${vo.weight} kg</span>
                                             <span class="col-4">${vo.productGradeVO.grade_name}</span>
-                                            <span class="col-4">${vo.quantity} (개)</span>
+                                            <span class="col-4">${vo.quantity} (Tray)</span>
                                           </div>
                                     
                                         </li>
-                                        <li class="list-group-item"><div class="opacity-50">원산지</div>${vo.product_address}</li>
-                                        <li class="list-group-item"><div class="opacity-50">입찰 단위 가격</div><span id="unitprice"><fmt:formatNumber value="5000" pattern="#,###"/></span></li>
+                                        <li class="list-group-item"><div class="opacity-50">유통 법인</div>${vo.product_address}</li>
+                                        <li class="list-group-item"><div class="opacity-50">입찰 단위 가격</div><span id="unitprice"><fmt:formatNumber value="50000" pattern="#,###"/></span></li>
                                     </ul>
                                   <div class="row">
                                       <input class="col-8" type="text" id="inputfree" disabled onkeyup="getCalculate(this)" onblur="getCalculate2(this)">
                                       <button type="button" class="btn btn-outline-secondary col-4" disabled id="free-bidding" onclick="setFreeBidding()">입찰</button>
                                       <button type="button" class="btn btn-outline-secondary" disabled id="unit-bidding" onclick="setUnitBidding()">단위 가격 자동 입찰</button><br>
-                                      <span>보유포인트 : <span id="mypoint"><fmt:formatNumber value="400000" pattern="#,###"/></span></span>
+                                      <span>보유포인트 : <span id="mypoint"><fmt:formatNumber value="10000000" pattern="#,###"/></span></span>
                                   </div>
                                  
                                 </div>
@@ -323,9 +323,10 @@
         </h1>
             
         <section class="make-center">
-            <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
+            <!-- <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20> -->
+            <input type="text" id="room-id" value="abcdef">
             <!-- <button id="open-room">Open Room</button> -->
-            <button id="join-room">Join Room</button>
+            	<button id="join-room">Join Room</button>
             <button id="open-or-join-room">Auto Open Or Join Room</button>
 
             <!-- <div id="videos-container" style="margin: 20px 0;"></div> -->
@@ -340,7 +341,7 @@
   <script src="/static/js/auction/chat.js"></script>
   <script src="/static/js/auction/getHTMLMediaElement.js"></script>
   <script src="/static/js/auction/RTCMultiConnection.js"></script>
-  <script src="https://172.30.75.3:9001/socket.io/socket.io.js"></script>
+  <script src="https://192.168.0.38:9001/socket.io/socket.io.js"></script>
   <script src="/static/js/auction/multi.js"></script>
   <script src="https://www.webrtc-experiment.com/common.js"></script>
 

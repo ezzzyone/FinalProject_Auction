@@ -4501,6 +4501,7 @@ var RTCMultiConnection = function(roomid, forceOptions) {
                 if (isRoomOpened === true) {
                     if (connection.enableLogs) {
                         console.log('isRoomOpened: ', isRoomOpened, ' roomid: ', connection.sessionid);
+
                     }
                     callback(isRoomOpened, connection.sessionid);
                 }

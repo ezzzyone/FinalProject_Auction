@@ -180,7 +180,8 @@
                     <i class="bi bi-envelope flex-shrink-0"></i>
                     <c:choose>
                       <c:when test="${productVO.stateNum == 5}">
-                        <div style="margin-top: 5px; cursor: pointer;" onclick="location.href='/kdy/auctionAdd?product_num=${productVO.product_num}';">
+                        <!-- <div style="margin-top: 5px; cursor: pointer;" onclick="location.href='/kdy/auctionAdd?product_num=${productVO.product_num}';"> -->
+                          <div style="margin-top: 5px; cursor: pointer;" onclick="getIngAuction('${productVO.product_num}')">
                           <h4>경매 하기</h4>
                         </div>
                         </c:when>
@@ -282,5 +283,8 @@
       </div>
     </div>
         <c:import url="../common/footer.jsp"></c:import>
+        
+    <!--  현재 진행 중인 방송이 있는지 판별 -->    
+    <script type="text/javascript" src="/static/js/auction/getIng.js"></script>
 </body>
 </html>
