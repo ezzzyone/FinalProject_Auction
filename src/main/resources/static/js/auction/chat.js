@@ -1,3 +1,14 @@
+const websocket = new WebSocket("wss://192.168.0.38:80/chat");
+
+websocket.onmessage = onMessage;
+websocket.onopen = onOpen;
+websocket.onclose = onClose;
+
+
+$(window).on('beforeunload', function(){
+    onClose();
+});
+
 
 //경매 시작 버튼 클릭 시 실행
 $("#startauction").click(function(){
@@ -114,7 +125,7 @@ $("#terminateauction").click(function(){
   let myinitpoint=$("#mypoint").html();
 
   //참여자 리스트
-  const participants = [];
+  let participants = [];
 
   //본인 id
   const username = $("#username").val();
@@ -126,12 +137,6 @@ $("#terminateauction").click(function(){
   $("#send-msg").on("click", (e) => {
       send();
   });
-
-  const websocket = new WebSocket("wss://192.168.0.38:80/chat");
-
-  websocket.onmessage = onMessage;
-  websocket.onopen = onOpen;
-  websocket.onclose = onClose;
 
 
 
@@ -155,6 +160,7 @@ $("#terminateauction").click(function(){
   //경매에서 나갔을 때
   function onClose(evt) {
       
+    console.log("연결 해제 : " + evt);
     //현재가 currentprice에서 가져와서 숫자로 변경
     let curprice = $("#currentprice").html();
         curprice = curprice.split("(");
@@ -216,11 +222,15 @@ $("#terminateauction").click(function(){
         str +="<span>"+arr[1]+arr[2]+"</span>"
         str += "</div>";
         $("#chat-box").append(str);
-            // if(sessionId == '[입장]'){
-            //     participants.push(arr[1]);
-            // }else{
-            //     participants = participants.filter((element)=> element !== username);
-            // }
+            if(sessionId == '[퇴장]'){
+                for(var i = 0; i < participants.length; i++){ 
+                    if (participants[i] === arr[1]) { 
+                      participants.splice(i, 1); 
+                      i--; 
+                    }
+                  }
+                  
+            }
       }else if(sessionId == '강퇴'){
         if(message == username){
             Swal.fire({
@@ -291,7 +301,7 @@ $("#terminateauction").click(function(){
                     minusPoint(renwalprice_number);
                 }
             var str = "<div class='d-flex justify-content-center'>";
-                str +="<span>"+"최고가 입찰자 퇴장으로 인해 현재가/입찰자가 조정되었습니다."+" (현재가 : "+renwalprice+" 원,"+ arr[1]+" 님)"+"</span>"
+                str +="<span>"+"최고가 입찰자 퇴장으로 인해 현재가/입찰자가 조정되었습니다."+" (현재가 : "+renewalprice+" 원,"+ arr[1]+" 님)"+"</span>"
                 str += "</div>";
             $("#chat-box").append(str);
 
