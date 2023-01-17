@@ -50,7 +50,7 @@ public class AuctionController {
 		ModelAndView mv = new ModelAndView();
 		//로그인 안했으면 로그인페이지로 이동
 		if(principal == null) {
-			mv.setViewName("redirect:/");
+			mv.setViewName("redirect:/members/login");
 			return mv;
 		}
 		
