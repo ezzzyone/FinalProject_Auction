@@ -113,21 +113,23 @@ public class SocketHandler extends TextWebSocketHandler{
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		// TODO Auto-generated method stub
 		
-		for(int i = 0; i<participants.size(); i++) {
-			if(participants.get(i).equals(session.getPrincipal().getName())) {
-				participants.remove(i);
-			}		
-		}
 		
-		String users = String.join(":", participants);
-		
-		users = "[전체참여자]:"+users;
-		
-		
-		for(WebSocketSession s : sessionList) {
-			
-			s.sendMessage(new TextMessage(users));
-		}
+//		for(int i = 0; i<participants.size(); i++) {
+//			if(participants.get(i).equals(session.getPrincipal().getName())) {
+//				participants.remove(i);
+//			}		
+//		}
+//		
+//		
+//		String users = String.join(":", participants);
+//		
+//		users = "[전체참여자]:"+users;
+//		
+//		
+//		for(WebSocketSession s : sessionList) {
+//			
+//			s.sendMessage(new TextMessage(users));
+//		}
 		
 		sessionList.remove(session);
 	}
